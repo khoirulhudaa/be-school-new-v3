@@ -6,8 +6,6 @@ const { globalLimiter } = require('../middlewares/rateLimiter');
 const multer = require('multer');
 const { protectMultiRole } = require('../middlewares/protectMultiRole');
 
-const router = express.Router();
-
 // Gunakan memory storage agar buffer bisa dikirim langsung ke Cloudinary
 const upload = multer({ 
   storage: multer.memoryStorage(),
