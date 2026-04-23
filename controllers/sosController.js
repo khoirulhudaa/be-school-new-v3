@@ -272,7 +272,7 @@ class SOSController {
       if (!userType || userType === 'guru') {
         const teachers = await GuruTendik.findAll({
           where: { schoolId: parseInt(schoolId) },
-          attributes: ['id', 'nama', 'position']
+          attributes: ['id', 'nama', 'role']
         });
         const teacherIds = teachers.map(t => t.id);
         const teacherSOS = await SOS.findAll({
