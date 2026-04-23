@@ -1,4 +1,4 @@
-const izin = require('../models/izin');
+const Izin = require('../models/izin');
 const Siswa = require('../models/siswa');
 const { Op } = require('sequelize');
 
@@ -52,7 +52,7 @@ class IzinController {
       const recurringGroupId = isRecurring ? `RG-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` : null;
 
       // Create parent izin
-      const parentIzin = await izin.create({
+      const parentIzin = await Izin.create({
         siswaId: parseInt(siswaId),
         jenis,
         tanggalMulai,
@@ -71,7 +71,7 @@ class IzinController {
       if (isRecurring && (recurringType === 'weekly' || recurringType === 'monthly') && recurringEndDate) {
         const dates = this._generateRecurringDates(tanggalMulai, tanggalAkhir, recurringType, recurringEndDate);
         childIzin = await Promise.all(dates.slice(1).map(async (date) => {
-          return await izin.create({
+          return await Izin.create({
             siswaId: parseInt(siswaId),
             jenis,
             tanggalMulai: date.tanggalMulai,
@@ -111,7 +111,7 @@ class IzinController {
       const where = { siswaId: parseInt(siswaId) };
       if (status) where.status = status;
 
-      const izins = await izin.findAll({
+      const izins = await Izin.findAll({
         where,
         include: [{ model: Siswa, as: 'siswa', attributes: ['nama', 'nis', 'schoolId'] }],
         order: [['createdAt', 'DESC']],
@@ -130,12 +130,12 @@ class IzinController {
       const { schoolId } = req.query;
       const enforcedSchoolId = schoolId || req.enforcedSchoolId;
 
-      const parentIzin = await izin.findByPk(id);
+      const parentIzin = await Izin.findByPk(id);
       if (!parentIzin) {
         return res.status(404).json({ success: false, message: 'Izin not found' });
       }
 
-      const children = await izin.findAll({
+      const children = await Izin.findAll({
         where: { recurringParentId: id }
       });
 
@@ -160,7 +160,7 @@ class IzinController {
 
       const offset = (parseInt(page) - 1) * parseInt(limit);
 
-      const { count, rows } = await izin.findAndCountAll({
+      const { count, rows } = await Izin.findAndCountAll({
         where,
         include: [{
           model: Siswa,
@@ -202,9 +202,9 @@ class IzinController {
 
       const where = { siswaId: { [Op.in]: siswaIds } };
 
-      const pending = await izin.count({ where: { ...where, status: 'pending' } });
-      const approved = await izin.count({ where: { ...where, status: 'approved' } });
-      const rejected = await izin.count({ where: { ...where, status: 'rejected' } });
+      const pending = await Izin.count({ where: { ...where, status: 'pending' } });
+      const approved = await Izin.count({ where: { ...where, status: 'approved' } });
+      const rejected = await Izin.count({ where: { ...where, status: 'rejected' } });
 
       return res.json({
         success: true,
@@ -231,7 +231,7 @@ class IzinController {
 
       const siswaIds = siswas.map(s => s.id);
 
-      const izinList = await izin.findAll({
+      const izinList = await Izin.findAll({
         where: {
           siswaId: { [Op.in]: siswaIds },
           status: 'pending'
@@ -259,30 +259,30 @@ class IzinController {
       const { approvedBy, schoolId } = req.body;
       const enforcedSchoolId = schoolId || req.enforcedSchoolId;
 
-      const izin = await izin.findByPk(id, {
+      const dataIzin = await Izin.findByPk(id, {
         include: [{ model: Siswa, as: 'siswa', attributes: ['schoolId'] }]
       });
-      if (!izin) return res.status(404).json({ success: false, message: 'Izin tidak ditemukan' });
+      if (!dataIzin) return res.status(404).json({ success: false, message: 'Izin tidak ditemukan' });
 
       // Security: verify school match
-      if (enforcedSchoolId && izin.siswa && izin.siswa.schoolId !== parseInt(enforcedSchoolId)) {
+      if (enforcedSchoolId && dataIzin.siswa && dataIzin.siswa.schoolId !== parseInt(enforcedSchoolId)) {
         return res.status(403).json({ success: false, message: 'Akses ditolak' });
       }
 
-      izin.status = 'approved';
-      izin.approvedBy = approvedBy;
-      izin.approvedAt = new Date();
-      await izin.save();
+      dataIzin.status = 'approved';
+      dataIzin.approvedBy = approvedBy;
+      dataIzin.approvedAt = new Date();
+      await Izin.save();
 
       // If this is a parent recurring izin, approve all pending children
-      if (izin.isRecurring && !izin.recurringParentId) {
-        await izin.update(
+      if (dataIzin.isRecurring && !dataIzin.recurringParentId) {
+        await Izin.update(
           { status: 'approved', approvedBy, approvedAt: new Date() },
-          { where: { recurringGroupId: izin.recurringGroupId, status: 'pending' } }
+          { where: { recurringGroupId: dataIzin.recurringGroupId, status: 'pending' } }
         );
       }
 
-      return res.json({ success: true, data: izin });
+      return res.json({ success: true, data: dataIzin });
     } catch (err) {
       return res.status(500).json({ success: false, message: err.message });
     }
@@ -295,7 +295,7 @@ class IzinController {
       const { approvedBy, schoolId } = req.body;
       const enforcedSchoolId = schoolId || req.enforcedSchoolId;
 
-      const izin = await izin.findByPk(id, {
+      const izin = await Izin.findByPk(id, {
         include: [{ model: Siswa, as: 'siswa', attributes: ['schoolId'] }]
       });
       if (!izin) return res.status(404).json({ success: false, message: 'Izin tidak ditemukan' });
@@ -308,7 +308,7 @@ class IzinController {
       izin.status = 'rejected';
       izin.approvedBy = approvedBy;
       izin.approvedAt = new Date();
-      await izin.save();
+      await Izin.save();
 
       return res.json({ success: true, data: izin });
     } catch (err) {
@@ -323,7 +323,7 @@ class IzinController {
       const { schoolId } = req.query;
       const enforcedSchoolId = schoolId || req.enforcedSchoolId;
 
-      const izin = await izin.findByPk(id, {
+      const izin = await Izin.findByPk(id, {
         include: [{ model: Siswa, as: 'siswa', attributes: ['schoolId'] }]
       });
       if (!izin) return res.status(404).json({ success: false, message: 'Izin tidak ditemukan' });
@@ -335,9 +335,9 @@ class IzinController {
 
       // If parent of recurring, delete all children first
       if (izin.isRecurring && !izin.recurringParentId) {
-        await izin.destroy({ where: { recurringGroupId: izin.recurringGroupId } });
+        await Izin.destroy({ where: { recurringGroupId: izin.recurringGroupId } });
       } else {
-        await izin.destroy();
+        await Izin.destroy();
       }
 
       return res.json({ success: true, message: 'Izin deleted' });
