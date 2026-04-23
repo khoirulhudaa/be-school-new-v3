@@ -3,6 +3,49 @@ const router = express.Router();
 const siswaStatsController = require('../controllers/siswaStatsController');
 const optionalAuth = require('../middlewares/optionalLimiter');
 const { globalLimiter } = require('../middlewares/rateLimiter');
+const multer = require('multer');
+const { protectMultiRole } = require('../middlewares/protectMultiRole');
+
+const router = express.Router();
+
+// Gunakan memory storage agar buffer bisa dikirim langsung ke Cloudinary
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 } // Batas 5MB sesuai UI frontend
+});
+
+// Endpoint: /api/siswa
+router.get('/', siswaStatsController.getAllStudents); // Sesuai fetch di frontend tadi
+router.get('/all-no-pagination', siswaStatsController.getAllStudentsNoPagination);
+router.post('/', upload.single('photo'), siswaStatsController.createStudent);
+router.post('/bulk', siswaStatsController.bulkCreateStudents);
+router.get('/search', siswaStatsController.getStudentSearch);
+router.put('/:id', upload.single('photo'), siswaStatsController.updateStudent);
+router.delete('/:id', siswaStatsController.deleteStudent);
+router.post('/login', loginLimiter, siswaStatsController.checkStudentAuth);
+router.get('/:parentId/anak', siswaStatsController.getParentChildren);
+router.get('/:id/location', siswaStatsController.updateStudentLocation );
+router.put('/class/bulk-update-class', siswaStatsController.updateClassByBatch);
+
+// --- API ABSENSI ---
+// Endpoint: /api/siswa/scan
+router.post('/scan', siswaStatsController.scanQRCode);
+router.get('/get-attendances', protectMultiRole, siswaStatsController.getAttendanceHistory);
+
+router.get('/validate-qr', siswaStatsController.validateUserByQR);
+
+// Mark Absence (Izin, Sakit, Alpha - Satuan atau Bulk)
+router.post('/mark-absence', siswaStatsController.markAbsence);
+router.get('/detail/:id', siswaStatsController.getUserDetail);
+// --- 3. API STATISTIK & LAPORAN ---
+router.get('/share-rekap', siswaStatsController.shareRekapHarian);
+router.get('/share-rekap-progress', siswaStatsController.shareRekapProgress);
+// Statistik Dashboard (Hadir, Sakit, Izin, Alpha hari ini)
+router.get('/today-stats', siswaStatsController.getTodayStats);
+router.get('/summary-attendances', siswaStatsController.getAttendanceSummary);
+router.get('/attendance-report', optionalAuth, globalLimiter, siswaStatsController.getAttendanceReport);
+router.get('/early-warning', siswaStatsController.getEarlyWarningReport);
+router.get('/hall-of-fame', siswaStatsController.getPublicHallOfFame);
 
 // Student stats routes
 router.get('/streak', optionalAuth, siswaStatsController.getStreak);
