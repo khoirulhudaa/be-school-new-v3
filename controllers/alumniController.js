@@ -376,12 +376,10 @@ exports.getAlumniStats = async (req, res) => {
       limit: 10
     });
 
-    // Alumni with stories
     const withStories = await Alumni.count({
       where: { ...where, hasStory: true }
     });
 
-    // Alumni with jobs
     const withJobs = await Alumni.count({
       where: { ...where, currentJob: { [Op.ne]: null } }
     });
