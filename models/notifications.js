@@ -11,6 +11,11 @@ const Notifications = sequelize.define('Notifications', {
   type: { type: DataTypes.ENUM('nilai', 'tugas', 'absen', 'izin', 'pengumuman', 'kuis', 'chat', 'info', 'broadcast'), defaultValue: 'info' },
   data: { type: DataTypes.JSON },
   isRead: { type: DataTypes.TINYINT, defaultValue: 0, field: 'is_read' },
-}, { timestamps: true, updatedAt: false, createdAt: 'created_at' });
+}, { 
+  timestamps: true, 
+  updatedAt: false, 
+  createdAt: 'created_at', 
+  underscored: true  // ✅ 
+ });
 
 module.exports = Notifications;

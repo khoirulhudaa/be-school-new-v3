@@ -147,7 +147,7 @@ class SOSController {
           userType,
           status: { [Op.in]: ['pending', 'acknowledged'] }
         },
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
       });
 
       return res.json({ success: true, data: { isActive: !!sos, lastSos: sos } });
@@ -169,7 +169,7 @@ class SOSController {
           reason: 'ortu_darurat',
           status: { [Op.in]: ['pending', 'acknowledged'] }
         },
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
         include: [{
           model: SOS,
           as: 'parentSos',
@@ -213,7 +213,7 @@ class SOSController {
           userId: parseInt(userId),
           userType
         },
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
         limit: parseInt(limit),
       });
 
@@ -253,7 +253,8 @@ class SOSController {
       if (!userType || userType === 'siswa') {
         const students = await Siswa.findAll({
           where: { schoolId: parseInt(schoolId) },
-          attributes: ['id', 'name', 'nis', 'classId']
+          // attributes: ['id', 'name', 'nis', 'classId']
+          attributes: ['id', 'name', 'nis', 'class']  // ✅ ganti classId → class
         });
         const studentIds = students.map(s => s.id);
         const studentSOS = await SOS.findAll({
@@ -262,7 +263,7 @@ class SOSController {
             userType: 'siswa',
             ...sosConditions
           },
-          order: [['createdAt', 'DESC']],
+          order: [['created_at', 'DESC']],
           limit: parseInt(limit)
         });
         allSOS.push(...studentSOS.map(s => ({ ...s.toJSON(), student: students.find(st => st.id === s.userId) })));
@@ -280,7 +281,7 @@ class SOSController {
             userType: 'guru',
             ...sosConditions
           },
-          order: [['createdAt', 'DESC']],
+          order: [['created_at', 'DESC']],
           limit: parseInt(limit)
         });
         allSOS.push(...teacherSOS.map(s => ({ ...s.toJSON(), teacher: teachers.find(t => t.id === s.userId) })));
@@ -298,7 +299,7 @@ class SOSController {
             userType: 'ortu',
             ...sosConditions
           },
-          order: [['createdAt', 'DESC']],
+          order: [['created_at', 'DESC']],
           limit: parseInt(limit)
         });
         allSOS.push(...parentSOS.map(s => ({ ...s.toJSON(), parent: parents.find(p => p.id === s.userId) })));
