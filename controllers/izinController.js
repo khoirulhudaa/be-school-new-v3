@@ -1,4 +1,4 @@
-const Izin = require('../models/izin');
+const izin = require('../models/izin');
 const Siswa = require('../models/siswa');
 const { Op } = require('sequelize');
 
@@ -52,7 +52,7 @@ class IzinController {
       const recurringGroupId = isRecurring ? `RG-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` : null;
 
       // Create parent izin
-      const parentIzin = await Izin.create({
+      const parentIzin = await izin.create({
         siswaId: parseInt(siswaId),
         jenis,
         tanggalMulai,
@@ -71,7 +71,7 @@ class IzinController {
       if (isRecurring && (recurringType === 'weekly' || recurringType === 'monthly') && recurringEndDate) {
         const dates = this._generateRecurringDates(tanggalMulai, tanggalAkhir, recurringType, recurringEndDate);
         childIzin = await Promise.all(dates.slice(1).map(async (date) => {
-          return await Izin.create({
+          return await izin.create({
             siswaId: parseInt(siswaId),
             jenis,
             tanggalMulai: date.tanggalMulai,
@@ -111,7 +111,7 @@ class IzinController {
       const where = { siswaId: parseInt(siswaId) };
       if (status) where.status = status;
 
-      const izins = await Izin.findAll({
+      const izins = await izin.findAll({
         where,
         include: [{ model: Siswa, as: 'siswa', attributes: ['nama', 'nis', 'schoolId'] }],
         order: [['createdAt', 'DESC']],
@@ -130,12 +130,12 @@ class IzinController {
       const { schoolId } = req.query;
       const enforcedSchoolId = schoolId || req.enforcedSchoolId;
 
-      const parentIzin = await Izin.findByPk(id);
+      const parentIzin = await izin.findByPk(id);
       if (!parentIzin) {
         return res.status(404).json({ success: false, message: 'Izin not found' });
       }
 
-      const children = await Izin.findAll({
+      const children = await izin.findAll({
         where: { recurringParentId: id }
       });
 
@@ -160,7 +160,7 @@ class IzinController {
 
       const offset = (parseInt(page) - 1) * parseInt(limit);
 
-      const { count, rows } = await Izin.findAndCountAll({
+      const { count, rows } = await izin.findAndCountAll({
         where,
         include: [{
           model: Siswa,
@@ -202,9 +202,9 @@ class IzinController {
 
       const where = { siswaId: { [Op.in]: siswaIds } };
 
-      const pending = await Izin.count({ where: { ...where, status: 'pending' } });
-      const approved = await Izin.count({ where: { ...where, status: 'approved' } });
-      const rejected = await Izin.count({ where: { ...where, status: 'rejected' } });
+      const pending = await izin.count({ where: { ...where, status: 'pending' } });
+      const approved = await izin.count({ where: { ...where, status: 'approved' } });
+      const rejected = await izin.count({ where: { ...where, status: 'rejected' } });
 
       return res.json({
         success: true,
@@ -231,7 +231,7 @@ class IzinController {
 
       const siswaIds = siswas.map(s => s.id);
 
-      const izinList = await Izin.findAll({
+      const izinList = await izin.findAll({
         where: {
           siswaId: { [Op.in]: siswaIds },
           status: 'pending'
@@ -259,7 +259,7 @@ class IzinController {
       const { approvedBy, schoolId } = req.body;
       const enforcedSchoolId = schoolId || req.enforcedSchoolId;
 
-      const izin = await Izin.findByPk(id, {
+      const izin = await izin.findByPk(id, {
         include: [{ model: Siswa, as: 'siswa', attributes: ['schoolId'] }]
       });
       if (!izin) return res.status(404).json({ success: false, message: 'Izin tidak ditemukan' });
@@ -276,7 +276,7 @@ class IzinController {
 
       // If this is a parent recurring izin, approve all pending children
       if (izin.isRecurring && !izin.recurringParentId) {
-        await Izin.update(
+        await izin.update(
           { status: 'approved', approvedBy, approvedAt: new Date() },
           { where: { recurringGroupId: izin.recurringGroupId, status: 'pending' } }
         );
@@ -295,7 +295,7 @@ class IzinController {
       const { approvedBy, schoolId } = req.body;
       const enforcedSchoolId = schoolId || req.enforcedSchoolId;
 
-      const izin = await Izin.findByPk(id, {
+      const izin = await izin.findByPk(id, {
         include: [{ model: Siswa, as: 'siswa', attributes: ['schoolId'] }]
       });
       if (!izin) return res.status(404).json({ success: false, message: 'Izin tidak ditemukan' });
@@ -323,7 +323,7 @@ class IzinController {
       const { schoolId } = req.query;
       const enforcedSchoolId = schoolId || req.enforcedSchoolId;
 
-      const izin = await Izin.findByPk(id, {
+      const izin = await izin.findByPk(id, {
         include: [{ model: Siswa, as: 'siswa', attributes: ['schoolId'] }]
       });
       if (!izin) return res.status(404).json({ success: false, message: 'Izin tidak ditemukan' });
@@ -335,7 +335,7 @@ class IzinController {
 
       // If parent of recurring, delete all children first
       if (izin.isRecurring && !izin.recurringParentId) {
-        await Izin.destroy({ where: { recurringGroupId: izin.recurringGroupId } });
+        await izin.destroy({ where: { recurringGroupId: izin.recurringGroupId } });
       } else {
         await izin.destroy();
       }
