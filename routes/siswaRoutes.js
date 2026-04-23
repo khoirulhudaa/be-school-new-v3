@@ -45,14 +45,6 @@ router.get('/attendance-report', optionalAuth, globalLimiter, siswaStatsControll
 router.get('/early-warning', siswaStatsController.getEarlyWarningReport);
 router.get('/hall-of-fame', siswaStatsController.getPublicHallOfFame);
 
-// Student stats routes
-router.get('/streak', optionalAuth, siswaStatsController.getStreak);
-router.get('/tepat-waktu', optionalAuth, siswaStatsController.getTepatWaktu);
-router.get('/teladan', optionalAuth, siswaStatsController.getTeladan);
-router.get('/today-stats', optionalAuth, siswaStatsController.getTodayStats);
-router.get('/rekap-saya', optionalAuth, siswaStatsController.getRekapSaya);
-router.get('/get-attendances', optionalAuth, siswaStatsController.getAttendances);
-
 // Attendance report & early warning (for admin dashboard)
 router.get('/attendance-report', optionalAuth, siswaStatsController.getAttendanceReport);
 router.get('/early-warning', optionalAuth, siswaStatsController.getEarlyWarning);
@@ -67,7 +59,16 @@ router.get('/global-stats', optionalAuth, globalLimiter, siswaStatsController.ge
 router.get('/search', optionalAuth, siswaStatsController.searchSiswa);
 router.get('/share-rekap-progress', optionalAuth, siswaStatsController.shareRekapProgress);
 router.get('/recap-kelas', optionalAuth, globalLimiter, siswaStatsController.getClassRecapWithDetails);
+
 // router.get('/share-rekap', optionalAuth, siswaStatsController.shareRekap);
 router.get('/share-rekap', optionalAuth, siswaStatsController.shareRekapHarian);
+
+// Student stats routes
+router.get('/streak', optionalAuth, siswaStatsController.getStreak);
+router.get('/tepat-waktu', optionalAuth, siswaStatsController.getTepatWaktu);
+router.get('/teladan', optionalAuth, siswaStatsController.getTeladan);
+router.get('/today-stats', optionalAuth, siswaStatsController.getTodayStats);
+router.get('/rekap-saya', optionalAuth, siswaStatsController.getRekapSaya);
+router.get('/get-attendances', optionalAuth, siswaStatsController.getAttendances);
 
 module.exports = router;

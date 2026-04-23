@@ -1678,6 +1678,11 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const verifySiswaSchool = async (siswaId, schoolId) => {
+  const siswa = await Student.findByPk(siswaId, { attributes: ['id', 'schoolId'] });
+  return siswa && siswa.schoolId === parseInt(schoolId);
+};
+
 // === REDIS + INVALIDATE CACHE ===
 // const redisClient = require('../config/redis');
 // const { getWorkdaysInRange } = require('../helper/getWorkDays');
@@ -5016,7 +5021,7 @@ exports.shareRekapHarian = async (req, res) => {
       if (!siswaId) return res.status(400).json({ success: false, message: 'siswaId required' });
 
       if (enforcedSchoolId) {
-        const isValid = await this._verifySiswaSchool(siswaId, enforcedSchoolId);
+        const isValid = await verifySiswaSchool(siswaId, enforcedSchoolId);
         if (!isValid) return res.status(403).json({ success: false, message: 'Akses ditolak' });
       }
 
@@ -5056,7 +5061,7 @@ exports.shareRekapHarian = async (req, res) => {
       if (!siswaId) return res.status(400).json({ success: false, message: 'siswaId required' });
 
       if (enforcedSchoolId) {
-        const isValid = await this._verifySiswaSchool(siswaId, enforcedSchoolId);
+        const isValid = await verifySiswaSchool(siswaId, enforcedSchoolId);
         if (!isValid) return res.status(403).json({ success: false, message: 'Akses ditolak' });
       }
 
@@ -5133,7 +5138,7 @@ exports.shareRekapHarian = async (req, res) => {
       if (!siswaId) return res.status(400).json({ success: false, message: 'siswaId required' });
 
       if (enforcedSchoolId) {
-        const isValid = await this._verifySiswaSchool(siswaId, enforcedSchoolId);
+        const isValid = await verifySiswaSchool(siswaId, enforcedSchoolId);
         if (!isValid) return res.status(403).json({ success: false, message: 'Akses ditolak' });
       }
 
@@ -5162,7 +5167,7 @@ exports.shareRekapHarian = async (req, res) => {
 
       // Security: verify siswa belongs to school
       if (enforcedSchoolId) {
-        const isValid = await this._verifySiswaSchool(siswaId, enforcedSchoolId);
+        const isValid = await verifySiswaSchool(siswaId, enforcedSchoolId);
         if (!isValid) return res.status(403).json({ success: false, message: 'Akses ditolak' });
       }
 
