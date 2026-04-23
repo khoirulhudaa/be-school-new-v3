@@ -183,7 +183,7 @@ class SOSController {
         const parentSosRecord = await SOS.findByPk(parentSos.parentSosId);
         if (parentSosRecord) {
           const ortu = await OrangTua.findByPk(parentSosRecord.userId, {
-            attributes: ['id', 'name', 'phone']
+            attributes: ['id', 'name', 'phoneNumber']
           });
           ortuInfo = ortu;
         }
@@ -290,7 +290,7 @@ class SOSController {
       if (!userType || userType === 'ortu') {
         const parents = await OrangTua.findAll({
           where: { schoolId: parseInt(schoolId) },
-          attributes: ['id', 'name', 'phone']
+          attributes: ['id', 'name', 'phoneNumber']
         });
         const parentIds = parents.map(p => p.id);
         const parentSOS = await SOS.findAll({
