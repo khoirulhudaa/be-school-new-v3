@@ -46,7 +46,7 @@ const ROLE_PERMISSIONS = {
   },
   guru_bk: {
     canManageUsers: false,
-    canViewStatistik: false,    // hanya statistik siswa sendiri
+    canViewStatistik: true,    // hanya statistik siswa sendiri
     canViewHasilDetail: true,
     canManageKuis: true,
     canManageJadwal: true,
