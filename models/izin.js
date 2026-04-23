@@ -50,4 +50,8 @@ const Izin = sequelize.define('Izin', {
   timestamps: true
 });
 
+// Tambahkan ini — lazy require untuk hindari circular dependency
+const Siswa = require('./siswa'); // sesuaikan nama file
+Izin.belongsTo(Siswa, { foreignKey: 'siswaId', as: 'siswa' });
+
 module.exports = Izin;
