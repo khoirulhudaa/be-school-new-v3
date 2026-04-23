@@ -111,7 +111,14 @@ exports.checkGuruAuth = async (req, res) => {
     // 4. Susun Profile
     const profile = guru.toJSON();
     profile.schoolLogo = dataSekolah ? dataSekolah.logoUrl : null;
-    profile.permissions = GURU_ROLE_PERMISSIONS[guru.role] || {}; // ✅ tambahkan ini
+    profile.permissions = ROLE_PERMISSIONS[guru.role] ?? {
+      canManageUsers: false,
+      canViewStatistik: false,
+      canViewHasilDetail: false,
+      canManageKuis: false,
+      canManageJadwal: false,
+      canViewHasilSummary: false,
+    };
 
     delete profile.password; 
     delete profile.createdAt;
