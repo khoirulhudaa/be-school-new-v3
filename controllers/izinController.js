@@ -113,7 +113,7 @@ class IzinController {
 
       const izins = await Izin.findAll({
         where,
-        include: [{ model: Siswa, as: 'siswa', attributes: ['nama', 'nis', 'schoolId'] }],
+        include: [{ model: Siswa, as: 'siswa', attributes: ['name', 'nis', 'schoolId'] }],
         order: [['createdAt', 'DESC']],
       });
 
@@ -166,7 +166,7 @@ class IzinController {
           model: Siswa,
           as: 'siswa',
           where: { schoolId: parseInt(enforcedSchoolId) },
-          attributes: ['nama', 'nis', 'schoolId']
+          attributes: ['name', 'nis', 'schoolId']
         }],
         order: [['createdAt', 'DESC']],
         limit: parseInt(limit),
