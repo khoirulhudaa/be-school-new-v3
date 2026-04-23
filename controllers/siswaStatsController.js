@@ -1,6 +1,19 @@
-const Kehadiran = require('../models/kehadiran');
-const Siswa = require('../models/siswa');
-const { Op } = require('sequelize');
+const Student = require('../models/siswa');
+const Attendance = require('../models/kehadiran');
+const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier');
+const { fn, col, Op, literal, where: sequelizeWhere } = require('sequelize');
+const moment = require('moment');
+const moment2 = require('moment-timezone');
+const ExcelJS = require('exceljs');
+const GuruTendik = require('../models/guruTendik');
+const sequelize = require('../config/database');
+const jwt = require('jsonwebtoken');
+const Alumni = require('../models/alumni');
+const Parent = require('../models/orangTua');
+const bcrypt = require('bcrypt');
+const SchoolProfile = require('../models/profileSekolah');
+const KehadiranGuru = require('../models/kehadiranGuru');
 
 class SiswaStatsController {
   // Helper: verify siswa belongs to school
