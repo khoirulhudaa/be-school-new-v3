@@ -1645,9 +1645,6 @@
 
 // module.exports = new SiswaStatsController();
 
-
-getEarlyWarning
-
 const Student = require('../models/siswa');
 const Attendance = require('../models/kehadiran');
 const cloudinary = require('cloudinary').v2;
