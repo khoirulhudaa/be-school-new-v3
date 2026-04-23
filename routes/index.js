@@ -60,6 +60,8 @@
     const healthBridgeRouter = require('./healthBridgeRoutes');
     const makananRouter = require('./makananRoutes');
     const nutrisiRouter = require('./nutrisiRoutes');
+    const konsellingRoutes = require('./bkRoutes');
+    const adminkonsellingRoutes = require('./bkAdminRoutes');
 
     router.use('/auth', require('./authRoutes'));
     router.use('/profile', require('./updateProfileRouter'));
@@ -67,6 +69,8 @@
     // ── Mount routes dengan limiter khusus ────────────────────────────────
 
     // Route sensitif (create/update banyak) → pakai strictLimiter
+    router.use('/bk-admin', adminkonsellingRoutes);
+    router.use('/bimbingan-konselling', konsellingRoutes);
     router.use('/berita', beritaRouter);
     router.use('/pengumuman', pengumumanRouter);
     router.use('/alumni', alumniRouter);
