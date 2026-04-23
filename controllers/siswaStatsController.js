@@ -5249,3 +5249,34 @@ exports.shareRekapHarian = async (req, res) => {
       return res.status(500).json({ success: false, message: err.message });
     }
   }
+
+  exports.searchSiswa = async (req, res) => {
+    try {
+      const { schoolId, q } = req.query;
+      const enforcedSchoolId = schoolId || req.enforcedSchoolId;
+
+      if (!enforcedSchoolId) {
+        return res.status(400).json({ success: false, message: 'schoolId required' });
+      }
+
+      if (!q || q.length < 2) {
+        return res.status(400).json({ success: false, message: 'Search query min 2 characters' });
+      }
+
+      const students = await Siswa.findAll({
+        where: {
+          schoolId: parseInt(enforcedSchoolId),
+          [Op.or]: [
+            { name: { [Op.like]: `%${q}%` } },
+            { nisn: { [Op.like]: `%${q}%` } }
+          ]
+        },
+        attributes: ['id', 'name', 'nisn', 'photoUrl'],
+        limit: 20
+      });
+
+      return res.json({ success: true, data: students });
+    } catch (err) {
+      return res.status(500).json({ success: false, message: err.message });
+    }
+  }
