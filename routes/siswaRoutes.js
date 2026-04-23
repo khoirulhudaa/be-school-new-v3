@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const siswaStatsController = require('../controllers/siswaStatsController');
 const optionalAuth = require('../middlewares/optionalLimiter');
-const { globalLimiter } = require('../middlewares/rateLimiter');
+const { globalLimiter, loginLimiter } = require('../middlewares/rateLimiter');
 const multer = require('multer');
 const { protectMultiRole } = require('../middlewares/protectMultiRole');
 
