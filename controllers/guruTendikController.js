@@ -27,6 +27,49 @@ const invalidateGuruTendikCache = async (schoolId) => {
   }
 };
 
+const ROLE_PERMISSIONS = {
+  super_admin: {
+    canManageUsers: true,
+    canViewStatistik: true,
+    canViewHasilDetail: false, // privasi — super admin tidak boleh baca detail konseling
+    canManageKuis: false,
+    canManageJadwal: false,
+    canViewHasilSummary: false,
+  },
+  koordinator_bk: {
+    canManageUsers: true,
+    canViewStatistik: true,
+    canViewHasilDetail: true,
+    canManageKuis: true,
+    canManageJadwal: true,
+    canViewHasilSummary: true,
+  },
+  guru_bk: {
+    canManageUsers: false,
+    canViewStatistik: false,    // hanya statistik siswa sendiri
+    canViewHasilDetail: true,
+    canManageKuis: true,
+    canManageJadwal: true,
+    canViewHasilSummary: true,
+  },
+  wali_kelas: {
+    canManageUsers: false,
+    canViewStatistik: false,
+    canViewHasilDetail: false,  // DILARANG — hanya rekomendasi akhir
+    canManageKuis: false,
+    canManageJadwal: false,
+    canViewHasilSummary: true,  // hanya ringkasan
+  },
+  guru: {
+    canManageUsers: false,
+    canViewStatistik: true,
+    canViewHasilDetail: false,  // DILARANG — hanya rekomendasi akhir
+    canManageKuis: true,
+    canManageJadwal: true,
+    canViewHasilSummary: true,  // hanya ringkasan
+  },
+};
+
 exports.checkGuruAuth = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -68,10 +111,12 @@ exports.checkGuruAuth = async (req, res) => {
     // 4. Susun Profile
     const profile = guru.toJSON();
     profile.schoolLogo = dataSekolah ? dataSekolah.logoUrl : null;
+    profile.permissions = GURU_ROLE_PERMISSIONS[guru.role] || {}; // ✅ tambahkan ini
 
     delete profile.password; 
     delete profile.createdAt;
     delete profile.updatedAt;
+    
 
     // 5. Generate JWT
     const token = jwt.sign(
@@ -82,7 +127,7 @@ exports.checkGuruAuth = async (req, res) => {
 
     res.json({ 
       success: true, 
-      token, 
+      token,  
       data: profile 
     });
 
