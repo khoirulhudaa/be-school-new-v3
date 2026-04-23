@@ -60,7 +60,7 @@ const ROLE_PERMISSIONS = {
     canManageJadwal: false,
     canViewHasilSummary: true,  // hanya ringkasan
   },
-  Guru: {
+  guru: {
     canManageUsers: false,
     canViewStatistik: true,
     canViewHasilDetail: false,  // DILARANG — hanya rekomendasi akhir
