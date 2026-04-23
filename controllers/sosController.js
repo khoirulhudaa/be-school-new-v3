@@ -147,7 +147,7 @@ class SOSController {
           userType,
           status: { [Op.in]: ['pending', 'acknowledged'] }
         },
-        order: [['created_at', 'DESC']],
+        order: [['createdAt', 'DESC']],
       });
 
       return res.json({ success: true, data: { isActive: !!sos, lastSos: sos } });
@@ -169,7 +169,7 @@ class SOSController {
           reason: 'ortu_darurat',
           status: { [Op.in]: ['pending', 'acknowledged'] }
         },
-        order: [['created_at', 'DESC']],
+        order: [['createdAt', 'DESC']],
         include: [{
           model: SOS,
           as: 'parentSos',
@@ -213,7 +213,7 @@ class SOSController {
           userId: parseInt(userId),
           userType
         },
-        order: [['created_at', 'DESC']],
+        order: [['createdAt', 'DESC']],
         limit: parseInt(limit),
       });
 
@@ -263,7 +263,7 @@ class SOSController {
             userType: 'siswa',
             ...sosConditions
           },
-          order: [['created_at', 'DESC']],
+          order: [['createdAt', 'DESC']],
           limit: parseInt(limit)
         });
         allSOS.push(...studentSOS.map(s => ({ ...s.toJSON(), student: students.find(st => st.id === s.userId) })));
@@ -281,7 +281,7 @@ class SOSController {
             userType: 'guru',
             ...sosConditions
           },
-          order: [['created_at', 'DESC']],
+          order: [['createdAt', 'DESC']],
           limit: parseInt(limit)
         });
         allSOS.push(...teacherSOS.map(s => ({ ...s.toJSON(), teacher: teachers.find(t => t.id === s.userId) })));
@@ -299,7 +299,7 @@ class SOSController {
             userType: 'ortu',
             ...sosConditions
           },
-          order: [['created_at', 'DESC']],
+          order: [['createdAt', 'DESC']],
           limit: parseInt(limit)
         });
         allSOS.push(...parentSOS.map(s => ({ ...s.toJSON(), parent: parents.find(p => p.id === s.userId) })));

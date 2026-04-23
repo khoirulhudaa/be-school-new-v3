@@ -36,7 +36,7 @@ class NotificationsController {
 
       const notifications = await Notifications.findAll({
         where: { userId: parseInt(userId), userType },
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
         limit: parseInt(limit),
       });
 
@@ -66,7 +66,7 @@ class NotificationsController {
           userType,
           isRead: false,
         },
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
       });
 
       return res.json({ success: true, data: notifications, count: notifications.length });
@@ -248,7 +248,7 @@ class NotificationsController {
 
       const notifications = await Notifications.findAll({
         where,
-        order: [['createdAt', 'DESC']],
+        order: [['created_at', 'DESC']],
         limit: parseInt(limit),
       });
 
