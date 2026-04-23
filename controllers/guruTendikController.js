@@ -359,6 +359,11 @@ exports.updateGuruTendik = async (req, res) => {
       guru.photoUrl = result.secure_url;
     }
 
+    if (req.body.password) {
+      const bcrypt = require('bcrypt'); // sudah ada di file
+      guru.password = await bcrypt.hash(req.body.password, 10);
+    }
+
     // 6. Simpan perubahan
     await guru.save();
 
