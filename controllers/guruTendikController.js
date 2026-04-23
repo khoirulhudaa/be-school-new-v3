@@ -111,7 +111,10 @@ exports.checkGuruAuth = async (req, res) => {
     // 4. Susun Profile
     const profile = guru.toJSON();
     profile.schoolLogo = dataSekolah ? dataSekolah.logoUrl : null;
-    profile.permissions = ROLE_PERMISSIONS[guru.role] ?? {
+    const normalizedRole = (guru.role || "").toLowerCase().replace(/\s+/g, '_'); 
+
+    // Sekarang "Guru BK" akan menjadi "guru_bk"
+    profile.permissions = ROLE_PERMISSIONS[normalizedRole] ?? {
       canManageUsers: false,
       canViewStatistik: false,
       canViewHasilDetail: false,
