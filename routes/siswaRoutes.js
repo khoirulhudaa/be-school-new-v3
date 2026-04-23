@@ -18,7 +18,7 @@ router.get('/early-warning', optionalAuth, siswaStatsController.getEarlyWarning)
 router.get('/early-warning/consecutive-absent', optionalAuth, siswaStatsController.getConsecutiveAbsent);
 router.get('/early-warning/low-attendance', optionalAuth, siswaStatsController.getLowAttendance);
 router.get('/early-warning/frequent-late', optionalAuth, siswaStatsController.getFrequentLate);
-router.get('/recap-kelas', optionalAuth, siswaStatsController.getRecapKelas);
+// router.get('/recap-kelas', optionalAuth, siswaStatsController.getRecapKelas);
 // router.get('/global-stats', optionalAuth, siswaStatsController.getGlobalStats);
 router.get('/global-stats', optionalAuth, globalLimiter, siswaStatsController.getGlobalAttendanceStats);
 
