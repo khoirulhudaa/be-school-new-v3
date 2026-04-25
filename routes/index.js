@@ -62,13 +62,17 @@
     const nutrisiRouter = require('./nutrisiRoutes');
     const konsellingRoutes = require('./bkRoutes');
     const adminkonsellingRoutes = require('./bkAdminRoutes');
-
+    const sponsorBannerRoutes = require('./sponsorBannerRoutes');
+    const bannerPricingRoutes = require('./bannerPricingRoutes');
+    
     router.use('/auth', require('./authRoutes'));
     router.use('/profile', require('./updateProfileRouter'));
-
+    
     // ── Mount routes dengan limiter khusus ────────────────────────────────
-
+    
     // Route sensitif (create/update banyak) → pakai strictLimiter
+    router.use('/premium-banners', sponsorBannerRoutes);
+    router.use('/banner-pricing', bannerPricingRoutes);
     router.use('/bk-admin', adminkonsellingRoutes);
     router.use('/bimbingan-konselling', konsellingRoutes);
     router.use('/berita', beritaRouter);
@@ -93,8 +97,6 @@
     router.use('/rating', ratingRouter);
     router.use('/organisasi', organisasiRouter);
     router.use('/partner', partnerRouter);
-    router.use('/premium-banners', require('./sponsorBannerRoutes'));
-    router.use('/banner-pricing', require('./bannerPricingRoutes'));
     router.use('/alumni-jejak', require('./alumniJejakRoutes'));
     router.use('/voting', votingRouter);
     router.use('/faq', faqRouter);
