@@ -94,6 +94,7 @@
     router.use('/organisasi', organisasiRouter);
     router.use('/partner', partnerRouter);
     router.use('/premium-banners', require('./sponsorBannerRoutes'));
+    router.use('/banner-pricing', require('./bannerPricingRoutes'));
     router.use('/alumni-jejak', require('./alumniJejakRoutes'));
     router.use('/voting', votingRouter);
     router.use('/faq', faqRouter);
