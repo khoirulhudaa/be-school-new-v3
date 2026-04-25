@@ -1,4 +1,4 @@
-const BannerPricing = require('../models/BannerPricing');
+const BannerPricing = require('../models/bannerPricing');
 const SponsorBanners = require('../models/sponsor_banners');
 
 // Default plans — dipakai saat seed atau plan tidak ditemukan

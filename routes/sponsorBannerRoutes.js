@@ -136,7 +136,7 @@ const multer = require('multer');
 const { protect } = require('../middlewares/protect');
 const optionalAuth = require('../middlewares/optionalLimiter');
 const SponsorBanners = require('../models/sponsor_banners');
-const BannerPricing = require('../models/BannerPricing');
+const BannerPricing = require('../models/bannerPricing');
 
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
