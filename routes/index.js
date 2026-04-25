@@ -144,7 +144,7 @@
     router.get('/testing', (req, res) => {
       res.json({
         success: true,
-        message: 'API SEKOLAH (1.0.1) WITH PM2',
+        message: 'API SEKOLAH (1.0.1) WITH PM2 V2',
         timestamp: new Date().toISOString()
       });
     });
