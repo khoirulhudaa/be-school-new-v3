@@ -71,8 +71,8 @@
     // ── Mount routes dengan limiter khusus ────────────────────────────────
     
     // Route sensitif (create/update banyak) → pakai strictLimiter
-    router.use('/premium-banners', sponsorBannerRoutes);
     router.use('/banner-pricing', bannerPricingRoutes);
+    router.use('/premium-banners', sponsorBannerRoutes);
     router.use('/bk-admin', adminkonsellingRoutes);
     router.use('/bimbingan-konselling', konsellingRoutes);
     router.use('/berita', beritaRouter);
