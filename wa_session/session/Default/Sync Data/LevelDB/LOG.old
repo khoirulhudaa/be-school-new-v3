@@ -1,2 +1,3 @@
-2026/04/23-08:34:53.617 164 Creating DB C:\Users\ADVAN\Downloads\be_school_new\wa_session\session\Default\Sync Data\LevelDB since it was missing.
-2026/04/23-08:34:53.738 164 Reusing MANIFEST C:\Users\ADVAN\Downloads\be_school_new\wa_session\session\Default\Sync Data\LevelDB/MANIFEST-000001
+2026/04/27-09:10:36.976 43f8 Reusing MANIFEST C:\Users\ADVAN\Downloads\be_school_new\wa_session\session\Default\Sync Data\LevelDB/MANIFEST-000001
+2026/04/27-09:10:36.994 43f8 Recovering log #3
+2026/04/27-09:10:36.998 43f8 Reusing old log C:\Users\ADVAN\Downloads\be_school_new\wa_session\session\Default\Sync Data\LevelDB/000003.log 
