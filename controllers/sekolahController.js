@@ -308,3 +308,31 @@ exports.getSchoolDistribution = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+// Bulk update semua sekolah (active/inactive)
+exports.bulkUpdateSchoolStatus = async (req, res) => {
+  try {
+    const { isActive } = req.body;
+
+    if (typeof isActive !== 'boolean') {
+      return res.status(400).json({
+        success: false,
+        message: 'isActive harus berupa boolean (true/false)',
+      });
+    }
+
+    const [affectedRows] = await SchoolProfile.update(
+      { isActive },
+      { where: {} } // semua data
+    );
+
+    res.json({
+      success: true,
+      message: `Berhasil ${isActive ? 'mengaktifkan' : 'menonaktifkan'} ${affectedRows} sekolah`,
+      data: { affectedRows, isActive },
+    });
+  } catch (err) {
+    console.error('bulkUpdateSchoolStatus error:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+};

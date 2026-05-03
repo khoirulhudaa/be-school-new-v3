@@ -36,7 +36,7 @@ const { initWhatsApp } = require('./config/whatsapp');
 const { tenantMiddleware, enforceTenant } = require('./middlewares/tenant');
 
 const app = express();
-const port = process.env.PORT || 5005;
+const port = process.env.PORT || 5006;
 
 // --- 2. BUAT HTTP SERVER ---
 const server = http.createServer(app);

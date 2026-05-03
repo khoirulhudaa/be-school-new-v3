@@ -10,5 +10,6 @@ router.put('/status', sekolahController.updateSchoolStatus);
 router.get('/export/sekolah', sekolahController.exportAllSchoolsExcel);
 router.get('/export/siswa/:schoolId', sekolahController.exportSiswaBySchoolExcel);
 router.get('/export/guru/:schoolId', sekolahController.exportGuruBySchoolExcel);
+router.put('/bulk-status', sekolahController.bulkUpdateSchoolStatus);
 
 module.exports = router;
